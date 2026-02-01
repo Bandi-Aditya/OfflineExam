@@ -23,14 +23,14 @@
 - **Files**: 
   - `backend/src/routes/studentRoutes.js`
   - `backend/src/controllers/studentController.js`
-  - `student-app/src/services/api.js`
+  - `portal-client/src/services/api.js`
   
 - **New  Routes**:
   - `GET /api/student/profile` - Get student profile
   - `PUT /api/student/profile` - Update profile (name, mobile only - email is restricted)
 
 ### 4. Student Logout Fix (✅ Completed)
-- **File**: `student-app/src/pages/Portal.jsx`
+- **File**: `portal-client/src/pages/Portal.jsx`
 - **Change**: Imported `authService` and added confirmation dialog for logout
 
 ### 5. Exam Retake Functionality (✅ Completed)
@@ -43,7 +43,7 @@
 ### 6. Result Display with Answers (✅ Completed)
 - **Files**: 
   - `backend/src/controllers/studentController.js` - `getExamResult` function
-  - `student-app/src/pages/Results.jsx`
+  - `portal-client/src/pages/Results.jsx`
   
 - **Changes**:
   - Results page shows score immediately after submission

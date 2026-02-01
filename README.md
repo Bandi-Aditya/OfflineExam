@@ -54,7 +54,7 @@ The services will be available at:
 ## 📁 Project Structure
 - `backend/`: Node.js Express server with PostgreSQL
 - `admin-dashboard/`: React + Vite application for exam/session control
-- `student-app/`: React + Vite + IndexedDB application for taking exams
+- `portal-client/`: React + Vite + IndexedDB application for taking exams
 - `docs/`: System documentation (Architecture, Schema, Manuals)
 
 ## 🔐 Security Features
