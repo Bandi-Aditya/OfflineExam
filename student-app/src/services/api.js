@@ -1,8 +1,8 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
-const API_URL = 'http://localhost:5000/api';
-const ENCRYPTION_KEY = 'ABCDEF1234567890ABCDEF1234567890'; // Same as backend for demo
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'ABCDEF1234567890ABCDEF1234567890';
 
 const api = axios.create({
     baseURL: API_URL,

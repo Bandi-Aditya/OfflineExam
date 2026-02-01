@@ -20,7 +20,7 @@ Welcome to the Secure Offline Examination System! This system is designed for co
    ```bash
    npm run install:all
    ```
-   *Note: This might take a few minutes as it installs dependencies for Backend, Admin Dashboard, and Student App.*
+   *Note: This might take a few minutes as it installs dependencies for Backend, Admin Dashboard, and Student App
 
 3. **Initialize Database Schema**
    ```bash
