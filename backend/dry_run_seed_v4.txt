@@ -1,0 +1,9 @@
+???? Connecting to MongoDB...
+??? MongoDB Connected: ac-ir82o9x-shard-00-02.3wtpdc6.mongodb.net
+???? Clearing existing data...
+???? Seeding database with initial data...
+??? Created admin user (ID: ADMIN001, Password: admin123)
+??? Created 5 sample students (IDs: STU001-STU005, Password: student123)
+??? Created sample exam
+??? Created sample session and assigned students
+???? Database seeded successfully!

@@ -1,0 +1,10 @@
+???? Connecting to MongoDB...
+node : ??? Error: querySrv ENOTFOUND _mongodb._tcp.31
+At line:1 char:1
++ node src/scripts/init-database.js 2>&1 | Out-File 
+-Encoding ascii dry ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (??? Error: que 
+   r...mongodb._tcp.31:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

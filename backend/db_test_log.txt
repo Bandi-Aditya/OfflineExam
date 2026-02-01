@@ -1,0 +1,1 @@
+Testing connection to: localhost offline_exam_db

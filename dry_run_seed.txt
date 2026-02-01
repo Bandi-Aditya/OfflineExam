@@ -1,0 +1,9 @@
+
+> secure-offline-exam-system@1.0.0 db:init
+> cd backend && npm run init-db
+
+
+> offline-exam-backend@1.0.0 init-db
+> node src/scripts/init-database.js
+
+???? Connecting to MongoDB...

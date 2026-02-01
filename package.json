@@ -1,0 +1,17 @@
+{
+  "name": "secure-offline-exam-system",
+  "version": "1.0.0",
+  "description": "Secure Offline Examination System for Computer Labs",
+  "main": "index.js",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../admin-dashboard && npm install && cd ../student-app && npm install",
+    "backend": "cd backend && npm run dev",
+    "admin": "cd admin-dashboard && npm run dev",
+    "student": "cd student-app && npm run dev",
+    "dev": "npx concurrently \"npm run backend\" \"npm run admin\" \"npm run student\"",
+    "db:init": "cd backend && npm run init-db"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
