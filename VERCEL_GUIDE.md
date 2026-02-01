@@ -23,7 +23,7 @@ Ensure your MongoDB Atlas cluster has **Network Access** set to `0.0.0.0/0` (All
 ---
 
 ## 3. Deploy the Student App
-1.  Navigate to the `student-app` folder.
+1.  Navigate to the `portal-client` folder.
 2.  Run `vercel`.
 3.  In the Vercel Dashboard, add this **Environment Variable**:
     *   `VITE_API_URL`: `https://your-backend-url.vercel.app/api`

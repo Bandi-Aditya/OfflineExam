@@ -9,7 +9,7 @@ build
 .env.production
 backend/.env
 admin-dashboard/.env
-student-app/.env
+portal-client/.env
 
 # IDE
 .vscode
