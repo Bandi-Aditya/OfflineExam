@@ -1,1 +1,20 @@
+# Dependencies
 node_modules
+dist
+build
+
+# Environment variables (NEVER commit these!)
+.env
+.env.local
+.env.production
+backend/.env
+admin-dashboard/.env
+student-app/.env
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
