@@ -35,24 +35,11 @@ const PORT = process.env.PORT || 5000;
 app.use((req, res, next) => {
     const origin = req.headers.origin;
 
-    // Allow any .vercel.app origin, custom domains, or local development
-    const allowedOrigins = [
-        process.env.CLIENT_URL,
-        process.env.ADMIN_URL,
-        'http://localhost:5173',
-        'http://localhost:5174',
-        'http://localhost:5000'
-    ].filter(Boolean);
-
+    // For this deployment we trust any origin that calls us.
+    // We echo back the Origin header so that credentials (Authorization header) work.
     if (origin) {
-        const isAllowed = 
-            origin.endsWith('.vercel.app') || 
-            origin.includes('localhost') ||
-            allowedOrigins.some(url => origin.startsWith(url));
-        
-        if (isAllowed) {
-            res.setHeader('Access-Control-Allow-Origin', origin);
-        }
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader('Vary', 'Origin');
     }
 
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
