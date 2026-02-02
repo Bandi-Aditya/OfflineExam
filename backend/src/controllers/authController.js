@@ -71,7 +71,9 @@ export const login = async (req, res) => {
         console.error('Login error:', error);
         res.status(500).json({
             success: false,
-            message: 'Server error during login'
+            message: 'Server error during login',
+            error: error.message,
+            stack: process.env.NODE_ENV !== 'production' ? error.stack : undefined
         });
     }
 };

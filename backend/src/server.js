@@ -215,6 +215,29 @@ app.get('/api/debug/db', async (req, res) => {
     }
 });
 
+// Debug endpoint to check users in database
+app.get('/api/debug/users', async (req, res) => {
+    try {
+        const User = (await import('./models/User.js')).default;
+        const count = await User.countDocuments();
+        const users = await User.find({}, { student_id: 1, name: 1, email: 1, role: 1, _id: 0 }).limit(5);
+
+        res.json({
+            success: true,
+            message: 'Users debug status',
+            totalUsers: count,
+            sampleUsers: users
+        });
+    } catch (err) {
+        console.error('Users debug error:', err);
+        res.status(500).json({
+            success: false,
+            message: 'Users debug failed',
+            error: err.message,
+        });
+    }
+});
+
 // 404 handler - must be last
 app.use((req, res) => {
     console.log('404 - Route not found:', req.method, req.path, req.url);
