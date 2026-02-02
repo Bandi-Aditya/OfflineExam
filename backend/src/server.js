@@ -77,8 +77,6 @@ const limiter = rateLimit({
     legacyHeaders: false,
 });
 
-app.use('/api/', limiter);
-
 // Request logging middleware
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -127,19 +125,9 @@ app.get('/', (req, res) => {
     });
 });
 
-// Test endpoint to verify route registration
-app.get('/api/test', (req, res) => {
-    res.json({
-        success: true,
-        message: 'API routes are working!',
-        path: req.path,
-        method: req.method,
-        timestamp: new Date().toISOString()
-    });
-});
-
 // API root endpoint - lists all available API endpoints
 // Handle both /api and /api/ (with trailing slash)
+// IMPORTANT: Define this BEFORE the rate limiter to avoid conflicts
 const apiInfoHandler = (req, res) => {
     console.log('API root endpoint hit:', req.method, req.path);
     res.json({
@@ -182,6 +170,20 @@ const apiInfoHandler = (req, res) => {
 
 app.get('/api', apiInfoHandler);
 app.get('/api/', apiInfoHandler);
+
+// Test endpoint to verify route registration
+app.get('/api/test', (req, res) => {
+    res.json({
+        success: true,
+        message: 'API routes are working!',
+        path: req.path,
+        method: req.method,
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Rate limiting - apply AFTER specific routes
+app.use('/api/', limiter);
 
 // API Routes
 try {
