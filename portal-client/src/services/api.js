@@ -1,7 +1,15 @@
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Ensure API_URL always ends with /api
+let API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Remove trailing slash if present
+API_URL = API_URL.replace(/\/$/, '');
+// Add /api if not present
+if (!API_URL.endsWith('/api')) {
+    API_URL = API_URL + '/api';
+}
+
 const ENCRYPTION_KEY = import.meta.env.VITE_ENCRYPTION_KEY || 'ABCDEF1234567890ABCDEF1234567890';
 
 const api = axios.create({

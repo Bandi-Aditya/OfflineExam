@@ -1,0 +1,8 @@
+Vercel CLI 50.9.6
+WARN! The following flags are deprecated: --github
+Read more in our changelog (https://vercel.com/changelog/new-vercel-cli-login-flow).
+
+  Visit https://vercel.com/oauth/device?user_code=DDGC-DWLX
+  Press [ENTER] to open the browser
+Waiting for authentication...
+^C

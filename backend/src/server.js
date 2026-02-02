@@ -15,25 +15,56 @@ import { checkAndSendReminders } from './utils/notificationService.js';
 // Initialize environment variables
 dotenv.config();
 
-// Connect to Database
+// Connect to Database (non-blocking)
 import connectDB from './config/database.js';
-connectDB();
+// Connect to database asynchronously - don't block route registration
+setTimeout(() => {
+    connectDB().catch(err => {
+        console.error('Database connection error:', err);
+        // Don't exit in serverless - let routes still work
+        if (process.env.VERCEL !== '1') {
+            process.exit(1);
+        }
+    });
+}, 0);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS configuration
-const corsOptions = {
-    origin: [
-        process.env.CLIENT_URL || 'http://localhost:5173',
-        process.env.ADMIN_URL || 'http://localhost:5174'
-    ],
-    credentials: true,
-    optionsSuccessStatus: 200
-};
+// Manual CORS & Preflight handling
+app.use((req, res, next) => {
+    const origin = req.headers.origin;
 
-// Middleware
-app.use(cors(corsOptions));
+    // Allow any .vercel.app origin, custom domains, or local development
+    const allowedOrigins = [
+        process.env.CLIENT_URL,
+        process.env.ADMIN_URL,
+        'http://localhost:5173',
+        'http://localhost:5174',
+        'http://localhost:5000'
+    ].filter(Boolean);
+
+    if (origin) {
+        const isAllowed = 
+            origin.endsWith('.vercel.app') || 
+            origin.includes('localhost') ||
+            allowedOrigins.some(url => origin.startsWith(url));
+        
+        if (isAllowed) {
+            res.setHeader('Access-Control-Allow-Origin', origin);
+        }
+    }
+
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // Handle Preflight (OPTIONS) requests immediately
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+    next();
+});
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -51,6 +82,8 @@ app.use('/api/', limiter);
 // Request logging middleware
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    console.log('Request URL:', req.url);
+    console.log('Request Path:', req.path);
     next();
 });
 
@@ -59,23 +92,81 @@ app.get('/health', (req, res) => {
     res.json({
         success: true,
         message: 'Server is running',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
+        vercel: process.env.VERCEL === '1' ? 'yes' : 'no'
+    });
+});
+
+// Root endpoint with route information
+app.get('/', (req, res) => {
+    res.json({
+        success: true,
+        message: 'Secure Offline Examination System API',
+        version: '1.0.0',
+        endpoints: {
+            health: 'GET /health',
+            auth: {
+                login: 'POST /api/auth/login',
+                verify: 'GET /api/auth/verify',
+                sendOTP: 'POST /api/auth/send-otp',
+                loginOTP: 'POST /api/auth/login-otp'
+            },
+            admin: {
+                exams: 'GET /api/admin/exams',
+                sessions: 'GET /api/admin/sessions',
+                students: 'GET /api/admin/students'
+            },
+            student: {
+                assignedExams: 'GET /api/student/exams/assigned',
+                profile: 'GET /api/student/profile'
+            }
+        },
+        timestamp: new Date().toISOString(),
+        routesRegistered: true
+    });
+});
+
+// Test endpoint to verify route registration
+app.get('/api/test', (req, res) => {
+    res.json({
+        success: true,
+        message: 'API routes are working!',
+        path: req.path,
+        method: req.method,
         timestamp: new Date().toISOString()
     });
 });
 
 // API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/admin', sessionRoutes);
-app.use('/api/student', studentRoutes);
-app.use('/api/admin/import', importRoutes);
-app.use('/api/admin/question-bank', questionBankRoutes);
+try {
+    console.log('Registering routes...');
+    app.use('/api/auth', authRoutes);
+    console.log('✅ /api/auth routes registered');
+    app.use('/api/admin', adminRoutes);
+    console.log('✅ /api/admin routes registered');
+    app.use('/api/admin', sessionRoutes);
+    console.log('✅ /api/admin session routes registered');
+    app.use('/api/student', studentRoutes);
+    console.log('✅ /api/student routes registered');
+    app.use('/api/admin/import', importRoutes);
+    console.log('✅ /api/admin/import routes registered');
+    app.use('/api/admin/question-bank', questionBankRoutes);
+    console.log('✅ /api/admin/question-bank routes registered');
+    console.log('✅ All routes registered successfully');
+} catch (error) {
+    console.error('❌ Error registering routes:', error);
+    throw error;
+}
 
 // 404 handler
 app.use((req, res) => {
+    console.log('404 - Route not found:', req.method, req.path);
     res.status(404).json({
         success: false,
-        message: 'Route not found'
+        message: 'Route not found',
+        path: req.path,
+        method: req.method
     });
 });
 
@@ -88,44 +179,66 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Background Tasks
-setInterval(checkAndSendReminders, 10 * 60 * 1000); // Check every 10 minutes
-checkAndSendReminders(); // Initial check on startup
+// Background Tasks (only run in non-serverless environments)
+// Note: Vercel serverless functions don't support long-running processes
+// Consider using Vercel Cron Jobs or external scheduler for reminders
+if (process.env.VERCEL !== '1') {
+    setInterval(checkAndSendReminders, 10 * 60 * 1000); // Check every 10 minutes
+    checkAndSendReminders(); // Initial check on startup
+}
 
-// Start server
-app.listen(PORT, () => {
-    console.log('');
-    console.log('╔════════════════════════════════════════════════════════════╗');
-    console.log('║                                                            ║');
-    console.log('║     🎓  SECURE OFFLINE EXAMINATION SYSTEM - SERVER  🎓     ║');
-    console.log('║                                                            ║');
-    console.log('╚════════════════════════════════════════════════════════════╝');
-    console.log('');
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 URL: http://localhost:${PORT}`);
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log('');
-    console.log('📋 Available endpoints:');
-    console.log('   - GET  /health');
-    console.log('   - POST /api/auth/login');
-    console.log('   - GET  /api/auth/verify');
-    console.log('   - GET  /api/admin/exams');
-    console.log('   - GET  /api/student/exams/assigned');
-    console.log('');
-    console.log('✅ Ready to accept connections!');
-    console.log('');
-});
+// Start server only if not in Vercel serverless environment
+// Vercel will handle the HTTP server, we just export the app
+if (process.env.VERCEL !== '1') {
+    app.listen(PORT, () => {
+        console.log('');
+        console.log('╔════════════════════════════════════════════════════════════╗');
+        console.log('║                                                            ║');
+        console.log('║     🎓  SECURE OFFLINE EXAMINATION SYSTEM - SERVER  🎓     ║');
+        console.log('║                                                            ║');
+        console.log('╚════════════════════════════════════════════════════════════╝');
+        console.log('');
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📍 URL: http://localhost:${PORT}`);
+        console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+        console.log('');
+        console.log('📋 Available endpoints:');
+        console.log('   - GET  /health');
+        console.log('   - POST /api/auth/login');
+        console.log('   - GET  /api/auth/verify');
+        console.log('   - GET  /api/admin/exams');
+        console.log('   - GET  /api/student/exams/assigned');
+        console.log('');
+        console.log('✅ Ready to accept connections!');
+        console.log('');
+    });
+} else {
+    console.log('🚀 Running on Vercel serverless environment');
+    console.log('✅ Express app exported and ready for Vercel');
+    // Log registered routes for debugging
+    console.log('Registered routes:');
+    console.log('  - GET  /');
+    console.log('  - GET  /health');
+    console.log('  - POST /api/auth/login');
+    console.log('  - GET  /api/auth/verify');
+    console.log('  - POST /api/auth/send-otp');
+    console.log('  - POST /api/auth/login-otp');
+}
 
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (err) => {
-    console.error('❌ Unhandled Promise Rejection:', err);
-    process.exit(1);
-});
+// Handle unhandled promise rejections (only in non-serverless)
+if (process.env.VERCEL !== '1') {
+    process.on('unhandledRejection', (err) => {
+        console.error('❌ Unhandled Promise Rejection:', err);
+        process.exit(1);
+    });
 
-// Handle uncaught exceptions
-process.on('uncaughtException', (err) => {
-    console.error('❌ Uncaught Exception:', err);
-    process.exit(1);
-});
+    // Handle uncaught exceptions
+    process.on('uncaughtException', (err) => {
+        console.error('❌ Uncaught Exception:', err);
+        process.exit(1);
+    });
+}
 
+// Export for Vercel serverless
+// Vercel will use this as the serverless function handler
 export default app;
