@@ -1,0 +1,23 @@
+﻿node.exe : Vercel CLI 50.9.6
+At C:\Users\91939\AppData\Roaming\npm\vercel.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/vercel/dist/vc.js" 
+$args
++     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 50.9.6:St 
+   ring) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Retrieving projectΓÇª
+> Environment Variables found for bandi-adityas-projects/backend 
+[277ms]
+
+ name                       value               environments                        created    
+ CLIENT_URL                 Encrypted           Production, Preview, Development    18h ago    
+ ADMIN_URL                  Encrypted           Production, Preview, Development    18h ago    
+ MONGODB_URI                Encrypted           Development, Preview, Production    18h ago    
+ JWT_SECRET                 Encrypted           Production, Preview, Development    18h ago    
+ ENCRYPTION_KEY             Encrypted           Development, Preview, Production    18h ago    
+ EMAIL_USER                 Encrypted           Development, Preview, Production    18h ago    
+ EMAIL_APP_PASSWORD         Encrypted           Development, Preview, Production    18h ago    
+
