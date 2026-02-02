@@ -132,6 +132,8 @@ export const register = async (req, res) => {
             });
         }
 
+        await connectDB();
+
         // Check if user already exists
         const existingUser = await User.findOne({
             $or: [{ student_id: studentId }, { email: email }]
@@ -295,6 +297,7 @@ export const forgotPassword = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Email is required' });
         }
 
+        await connectDB();
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ success: false, message: 'User with this email not found' });
