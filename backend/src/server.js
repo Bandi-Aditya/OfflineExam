@@ -138,6 +138,46 @@ app.get('/api/test', (req, res) => {
     });
 });
 
+// API root endpoint - lists all available API endpoints
+app.get('/api', (req, res) => {
+    res.json({
+        success: true,
+        message: 'Secure Offline Examination System API',
+        version: '1.0.0',
+        baseUrl: req.protocol + '://' + req.get('host') + '/api',
+        endpoints: {
+            auth: {
+                login: 'POST /api/auth/login',
+                verify: 'GET /api/auth/verify',
+                sendOTP: 'POST /api/auth/send-otp',
+                loginOTP: 'POST /api/auth/login-otp',
+                forgotPassword: 'POST /api/auth/forgot-password',
+                logout: 'POST /api/auth/logout',
+                register: 'POST /api/auth/register (admin only)'
+            },
+            admin: {
+                exams: 'GET /api/admin/exams',
+                createExam: 'POST /api/admin/exams',
+                sessions: 'GET /api/admin/sessions',
+                createSession: 'POST /api/admin/sessions',
+                students: 'GET /api/admin/students',
+                createStudent: 'POST /api/admin/students'
+            },
+            student: {
+                assignedExams: 'GET /api/student/exams/assigned',
+                downloadExam: 'GET /api/student/exams/:sessionId/download',
+                startExam: 'POST /api/student/exams/:sessionId/start',
+                submitExam: 'POST /api/student/exams/:sessionId/submit',
+                getResult: 'GET /api/student/exams/:sessionId/result',
+                profile: 'GET /api/student/profile'
+            },
+            test: 'GET /api/test',
+            health: 'GET /health'
+        },
+        timestamp: new Date().toISOString()
+    });
+});
+
 // API Routes
 try {
     console.log('Registering routes...');
