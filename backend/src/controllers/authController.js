@@ -3,6 +3,7 @@ import { generateToken } from '../middleware/auth.js';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { sendEmailOTP } from '../utils/emailService.js';
+import connectDB from '../config/database.js';
 
 // Temporary store for OTPs (In production, use Redis or DB with TTL)
 const otpStore = new Map();
@@ -22,6 +23,9 @@ export const login = async (req, res) => {
                 message: 'Student ID and password are required'
             });
         }
+
+        // Ensure database is connected (critical for serverless)
+        await connectDB();
 
         // Find user by student ID
         const user = await User.findOne({ student_id: studentId });
@@ -187,6 +191,7 @@ export const sendOTP = async (req, res) => {
             return res.status(400).json({ success: false, message: 'Student ID is required' });
         }
 
+        await connectDB();
         const user = await User.findOne({ student_id: studentId });
         if (!user) {
             return res.status(404).json({ success: false, message: 'Student not found' });
