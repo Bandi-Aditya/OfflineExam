@@ -251,6 +251,7 @@ export const loginWithOTP = async (req, res) => {
             return res.status(401).json({ success: false, message: 'Invalid or expired OTP' });
         }
 
+        await connectDB();
         const user = await User.findOne({ student_id: studentId });
         otpStore.delete(studentId); // Clean up
 
