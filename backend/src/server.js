@@ -139,7 +139,9 @@ app.get('/api/test', (req, res) => {
 });
 
 // API root endpoint - lists all available API endpoints
-app.get('/api', (req, res) => {
+// Handle both /api and /api/ (with trailing slash)
+const apiInfoHandler = (req, res) => {
+    console.log('API root endpoint hit:', req.method, req.path);
     res.json({
         success: true,
         message: 'Secure Offline Examination System API',
@@ -176,7 +178,10 @@ app.get('/api', (req, res) => {
         },
         timestamp: new Date().toISOString()
     });
-});
+};
+
+app.get('/api', apiInfoHandler);
+app.get('/api/', apiInfoHandler);
 
 // API Routes
 try {
@@ -199,14 +204,17 @@ try {
     throw error;
 }
 
-// 404 handler
+// 404 handler - must be last
 app.use((req, res) => {
-    console.log('404 - Route not found:', req.method, req.path);
+    console.log('404 - Route not found:', req.method, req.path, req.url);
+    console.log('Available routes should include: /, /health, /api, /api/test, /api/auth/*, etc.');
     res.status(404).json({
         success: false,
         message: 'Route not found',
         path: req.path,
-        method: req.method
+        url: req.url,
+        method: req.method,
+        hint: 'Try /api or /health or /api/test'
     });
 });
 
