@@ -1,0 +1,7 @@
+﻿Connecting to MongoDB...
+Connected!
+Total users: 3
+Sample users:
+  - ADMIN001: Admin (admin)
+  - TEST001: Test Student (student)
+  - 22x31a6609: Adhi (student)
