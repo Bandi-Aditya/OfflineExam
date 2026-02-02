@@ -193,6 +193,28 @@ try {
     throw error;
 }
 
+// Simple DB debug endpoint – helps verify Atlas connection in production
+app.get('/api/debug/db', async (req, res) => {
+    try {
+        const conn = await connectDB();
+        const state = conn.connection.readyState; // 1 = connected
+
+        res.json({
+            success: true,
+            message: 'DB debug status',
+            readyState: state,
+            host: conn.connection.host,
+        });
+    } catch (err) {
+        console.error('DB debug error:', err);
+        res.status(500).json({
+            success: false,
+            message: 'DB debug failed',
+            error: err.message,
+        });
+    }
+});
+
 // 404 handler - must be last
 app.use((req, res) => {
     console.log('404 - Route not found:', req.method, req.path, req.url);

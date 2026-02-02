@@ -1,0 +1,54 @@
+﻿node.exe : Vercel CLI 50.9.6
+At C:\Users\91939\AppData\Roaming\npm\vercel.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/vercel/dist/vc.js" 
+$args
++     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 50.9.6:St 
+   ring) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Retrieving projectΓÇª
+Deploying bandi-adityas-projects/admin-dashboard
+Uploading [--------------------] (0.0B/462B)
+Uploading [====================] (462.0B/462B)
+Inspect: https://vercel.com/bandi-adityas-projects/admin-dashboard
+/9PNdqw81fqLuo9C42qp726tvRRjr [2s]
+Production: https://admin-dashboard-l96c95nhl-bandi-adityas-projec
+ts.vercel.app [2s]
+Building...
+Building...
+Building: Running build in Washington, D.C., USA (East) ΓÇô iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 21 deployment files...
+Building: Restored build cache from previous deployment 
+(HtL8jh6LpSERaUSr7WxhpBtrhddM)
+Building: Running "vercel build"
+Building: Vercel CLI 50.9.6
+Building: Installing dependencies...
+Building: up to date in 860ms
+Building: 112 packages are looking for funding
+Building: run `npm fund` for details
+Building: Running "npm run build"
+Building: > admin-dashboard@0.0.0 build
+Building: > vite build
+Building: vite v5.4.21 building for production...
+Building: transforming...
+Building: Γ£ô 1705 modules transformed.
+Building: rendering chunks...
+Building: computing gzip size...
+Building: dist/index.html                   0.74 kB Γöé gzip:   
+0.43 kB
+Building: dist/assets/index-C_AirzMZ.css    3.75 kB Γöé gzip:   
+1.41 kB
+Building: dist/assets/index-GIf8vuOO.js   379.54 kB Γöé gzip: 
+118.37 kB
+Building: Γ£ô built in 3.18s
+Building: Build Completed in /vercel/output [5s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: https://admin-dashboard-l96c95nhl-bandi
+-adityas-projects.vercel.app [13s]
+Completing...
+Aliased: https://admin-dashboard-blue-nu.vercel.app [13s]
+https://admin-dashboard-l96c95nhl-bandi-adityas-projects.vercel.app

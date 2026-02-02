@@ -1,0 +1,56 @@
+﻿node.exe : Vercel CLI 50.9.6
+At C:\Users\91939\AppData\Roaming\npm\vercel.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/vercel/dist/vc.js" 
+$args
++     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 50.9.6:St 
+   ring) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Retrieving projectΓÇª
+Deploying bandi-adityas-projects/portal-client
+Uploading [--------------------] (0.0B/460B)
+Uploading [====================] (460.0B/460B)
+Inspect: https://vercel.com/bandi-adityas-projects/portal-client/B
+y8g58huce9wooRPrSpfdHqQqNaU [2s]
+Production: 
+https://portal-client-5v5ewey2f-bandi-adityas-projects.vercel.app 
+[2s]
+Building...
+Building...
+Building: Running build in Washington, D.C., USA (East) ΓÇô iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 19 deployment files...
+Building: Restored build cache from previous deployment 
+(8261JNd1eUYAUKqd82oV1uYMQeqb)
+Building: Running "vercel build"
+Building: Vercel CLI 50.9.6
+Building: Installing dependencies...
+Building: up to date in 918ms
+Building: 13 packages are looking for funding
+Building: run `npm fund` for details
+Building: Running "npm run build"
+Building: > portal-client@0.0.0 build
+Building: > vite build
+Building: vite v5.4.21 building for production...
+Building: transforming...
+Building: Γ£ô 1780 modules transformed.
+Building: rendering chunks...
+Building: computing gzip size...
+Building: dist/index.html                   0.74 kB Γöé gzip:   
+0.43 kB
+Building: dist/assets/index-mb61EY1I.css    1.44 kB Γöé gzip:   
+0.66 kB
+Building: dist/assets/index-CPF4tGVh.js   437.69 kB Γöé gzip: 
+144.16 kB
+Building: Γ£ô built in 3.55s
+Building: Build Completed in /vercel/output [5s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: 
+https://portal-client-5v5ewey2f-bandi-adityas-projects.vercel.app 
+[13s]
+Completing...
+Aliased: https://portal-client-snowy.vercel.app [13s]
+https://portal-client-5v5ewey2f-bandi-adityas-projects.vercel.app

@@ -1,0 +1,46 @@
+﻿node.exe : Vercel CLI 50.9.6
+At C:\Users\91939\AppData\Roaming\npm\vercel.ps1:24 char:5
++     & "node$exe"  "$basedir/node_modules/vercel/dist/vc.js" 
+$args
++     
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Vercel CLI 50.9.6:St 
+   ring) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Retrieving projectΓÇª
+Deploying bandi-adityas-projects/backend
+Uploading [--------------------] (0.0B/454B)
+Uploading [====================] (454.0B/454B)
+Inspect: https://vercel.com/bandi-adityas-projects/backend/FpA8VUz
+45PUimf5VHoJ2ZdnVDFzH [2s]
+Production: 
+https://backend-cvgav260i-bandi-adityas-projects.vercel.app [2s]
+Building...
+Building...
+Building: Running build in Washington, D.C., USA (East) ΓÇô iad1
+Building: Build machine configuration: 2 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 49 deployment files...
+Building: Restored build cache from previous deployment 
+(94zwcy1tSBXSEyHCqT1qiBL3bvPF)
+Building: Running "vercel build"
+Building: Vercel CLI 50.9.6
+Building: WARN! Due to `builds` existing in your configuration 
+file, the Build and Development Settings defined in your Project 
+Settings will not apply. Learn More: 
+https://vercel.link/unused-build-settings
+Building: Installing dependencies...
+Building: up to date in 737ms
+Building: 23 packages are looking for funding
+Building: run `npm fund` for details
+Building: Build Completed in /vercel/output [5s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: 
+https://backend-cvgav260i-bandi-adityas-projects.vercel.app [23s]
+Completing...
+Aliased: https://backend-umber-delta.vercel.app [23s]
+Due to `builds` existing in your configuration file, the Build 
+and Development Settings defined in your Project Settings will 
+not apply. Learn More: https://vercel.link/unused-build-settings
+https://backend-cvgav260i-bandi-adityas-projects.vercel.app
