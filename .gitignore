@@ -18,3 +18,13 @@ portal-client/.env
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs and tests
+*.log
+*_output.txt
+output_test.txt
+startup-test.js
+test-email.js
+verify-db.js
+.vercel
+
