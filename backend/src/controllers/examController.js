@@ -3,6 +3,7 @@ import QuestionBank from '../models/QuestionBank.js';
 import mongoose from 'mongoose';
 import fs from 'fs';
 import xlsx from 'xlsx';
+import connectDB from '../config/database.js';
 
 /**
  * Create a new exam
@@ -10,6 +11,7 @@ import xlsx from 'xlsx';
  */
 export const createExam = async (req, res) => {
     try {
+        await connectDB();
         const { title, description, durationMinutes, totalMarks, passingMarks } = req.body;
         const createdBy = req.user.id;
 
@@ -52,6 +54,7 @@ export const createExam = async (req, res) => {
  */
 export const getAllExams = async (req, res) => {
     try {
+        await connectDB();
         const exams = await Exam.find()
             .populate('created_by', 'name')
             .sort({ createdAt: -1 });
@@ -83,6 +86,7 @@ export const getAllExams = async (req, res) => {
  */
 export const getExamById = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         const exam = await Exam.findById(id);
@@ -122,6 +126,7 @@ export const getExamById = async (req, res) => {
  */
 export const updateExam = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
         const { title, description, durationMinutes, totalMarks, passingMarks, isActive } = req.body;
 
@@ -163,6 +168,7 @@ export const updateExam = async (req, res) => {
  */
 export const deleteExam = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         const exam = await Exam.findByIdAndDelete(id);
@@ -193,6 +199,7 @@ export const deleteExam = async (req, res) => {
  */
 export const addQuestion = async (req, res) => {
     try {
+        await connectDB();
         const { examId } = req.params;
         const { questionText, questionType, options, correctAnswer, marks, orderIndex } = req.body;
 
@@ -251,6 +258,7 @@ export const addQuestion = async (req, res) => {
  */
 export const updateQuestion = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params; // questionId
         const { questionText, questionType, options, correctAnswer, marks, orderIndex } = req.body;
 
@@ -295,6 +303,7 @@ export const updateQuestion = async (req, res) => {
  */
 export const deleteQuestion = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         const exam = await Exam.findOne({ 'questions._id': id });
@@ -328,6 +337,7 @@ export const deleteQuestion = async (req, res) => {
  */
 export const uploadExam = async (req, res) => {
     try {
+        await connectDB();
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No file uploaded' });
         }
@@ -462,6 +472,7 @@ export const uploadExam = async (req, res) => {
  */
 export const generateExamFromBank = async (req, res) => {
     try {
+        await connectDB();
         const { topic, level, title, durationMinutes } = req.body;
         const createdBy = req.user.id;
 

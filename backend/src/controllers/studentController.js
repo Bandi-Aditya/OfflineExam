@@ -3,6 +3,7 @@ import Exam from '../models/Exam.js';
 import { encrypt, generateSessionToken } from '../utils/encryption.js';
 import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
+import connectDB from '../config/database.js';
 
 
 /**
@@ -11,6 +12,7 @@ import bcrypt from 'bcryptjs';
  */
 export const getAssignedExams = async (req, res) => {
     try {
+        await connectDB();
         const studentId = req.user.id;
 
         const sessions = await ExamSession.find({
@@ -58,6 +60,7 @@ export const getAssignedExams = async (req, res) => {
  */
 export const downloadExam = async (req, res) => {
     try {
+        await connectDB();
         const { sessionId } = req.params;
         const studentId = req.user.id;
 
@@ -159,6 +162,7 @@ export const downloadExam = async (req, res) => {
  */
 export const startExam = async (req, res) => {
     try {
+        await connectDB();
         const { sessionId } = req.params;
         const studentId = req.user.id;
         const { sessionToken } = req.body;
@@ -218,6 +222,7 @@ export const startExam = async (req, res) => {
  */
 export const submitExam = async (req, res) => {
     try {
+        await connectDB();
         const { sessionId } = req.params;
         const studentId = req.user.id;
         const { sessionToken, answers, autoSubmitted = false } = req.body;
@@ -314,6 +319,7 @@ export const submitExam = async (req, res) => {
  */
 export const getExamResult = async (req, res) => {
     try {
+        await connectDB();
         const { sessionId } = req.params;
         const studentId = req.user.id;
 
@@ -398,6 +404,7 @@ export const getExamResult = async (req, res) => {
  */
 export const getProfile = async (req, res) => {
     try {
+        await connectDB();
         const studentId = req.user.id;
         const user = await User.findById(studentId).select('-password_hash');
 
@@ -435,6 +442,7 @@ export const getProfile = async (req, res) => {
  */
 export const updateProfile = async (req, res) => {
     try {
+        await connectDB();
         const studentId = req.user.id;
         const { name, mobile_number, password } = req.body;
 
@@ -486,6 +494,7 @@ export const updateProfile = async (req, res) => {
  */
 export const getPracticeTopics = async (req, res) => {
     try {
+        await connectDB();
         const QuestionBank = (await import('../models/QuestionBank.js')).default;
         const topics = await QuestionBank.distinct('topic');
         res.json({ success: true, data: { topics } });
@@ -501,6 +510,7 @@ export const getPracticeTopics = async (req, res) => {
  */
 export const generatePracticeExam = async (req, res) => {
     try {
+        await connectDB();
         const { topic, level, questionCount = 10 } = req.body;
         const QuestionBank = (await import('../models/QuestionBank.js')).default;
 
@@ -555,6 +565,7 @@ export const generatePracticeExam = async (req, res) => {
  */
 export const submitPracticeResult = async (req, res) => {
     try {
+        await connectDB();
         const { questions, answers } = req.body;
         const QuestionBank = (await import('../models/QuestionBank.js')).default;
 

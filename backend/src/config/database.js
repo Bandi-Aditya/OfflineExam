@@ -12,16 +12,16 @@ if (!cached) {
 
 const connectDB = async () => {
   // If already connected, return the existing connection
-  if (cached.conn) {
+  if (cached.conn && cached.conn.connection.readyState === 1) {
     return cached.conn;
   }
 
   // If connection is in progress, wait for it
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false,
+      bufferCommands: true, // Enable buffering so queries wait for connection
       maxPoolSize: 10, // Maintain up to 10 socket connections
-      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+      serverSelectionTimeoutMS: 10000, // Keep trying to send operations for 10 seconds
       socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
     };
 

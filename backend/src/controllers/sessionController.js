@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import { sendWelcomeEmail, sendExamScheduledEmail, sendExamUpdateEmail } from '../utils/emailService.js';
+import connectDB from '../config/database.js';
 
 /**
  * Create exam session
@@ -11,6 +12,7 @@ import { sendWelcomeEmail, sendExamScheduledEmail, sendExamUpdateEmail } from '.
  */
 export const createSession = async (req, res) => {
     try {
+        await connectDB();
         const { examId, sessionName, startTime, endTime, labName, studentIds, mode, classroom, floor, block } = req.body;
 
         // Validate input
@@ -95,6 +97,7 @@ export const createSession = async (req, res) => {
  */
 export const updateSession = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
         const { examId, sessionName, startTime, endTime, labName, mode, classroom, floor, block } = req.body;
 
@@ -163,6 +166,7 @@ export const updateSession = async (req, res) => {
  */
 export const getAllSessions = async (req, res) => {
     try {
+        await connectDB();
         const sessions = await ExamSession.find()
             .populate('exam', 'title')
             .sort({ createdAt: -1 });
@@ -199,6 +203,7 @@ export const getAllSessions = async (req, res) => {
  */
 export const getSessionById = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         const session = await ExamSession.findById(id)
@@ -284,6 +289,7 @@ export const toggleSession = async (req, res) => {
  */
 export const getLiveStatus = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         const session = await ExamSession.findById(id)
@@ -331,6 +337,7 @@ export const getLiveStatus = async (req, res) => {
  */
 export const getSessionResults = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         const session = await ExamSession.findById(id)
@@ -384,6 +391,7 @@ export const getSessionResults = async (req, res) => {
  */
 export const exportResults = async (req, res) => {
     try {
+        await connectDB();
         const { sessionId } = req.params;
 
         const session = await ExamSession.findById(sessionId)
@@ -455,6 +463,7 @@ export const exportResults = async (req, res) => {
  */
 export const createStudent = async (req, res) => {
     try {
+        await connectDB();
         const { studentId, name, email, password, mobileNumber } = req.body;
 
         // Basic validation
@@ -510,6 +519,7 @@ export const createStudent = async (req, res) => {
  */
 export const updateStudent = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
         const { name, email, studentId, mobileNumber, password } = req.body;
 
@@ -542,6 +552,7 @@ export const updateStudent = async (req, res) => {
  */
 export const getAllStudents = async (req, res) => {
     try {
+        await connectDB();
         const students = await User.find({ role: 'student' }).sort({ name: 1 });
         res.json({
             success: true,
@@ -568,6 +579,7 @@ export const getAllStudents = async (req, res) => {
  */
 export const getStudentHistory = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
 
         // Find all sessions where this student was assigned
@@ -602,6 +614,7 @@ export const getStudentHistory = async (req, res) => {
  */
 export const stopStudentTest = async (req, res) => {
     try {
+        await connectDB();
         const { sessionId, studentId } = req.params;
 
         const session = await ExamSession.findById(sessionId);
@@ -630,6 +643,7 @@ export const stopStudentTest = async (req, res) => {
  */
 export const deleteStudent = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
         // Ensure we only delete students, not admins
         const user = await User.findOneAndDelete({ _id: id, role: { $ne: 'admin' } });
@@ -655,6 +669,7 @@ export const deleteStudent = async (req, res) => {
  */
 export const deleteSession = async (req, res) => {
     try {
+        await connectDB();
         const { id } = req.params;
         const session = await ExamSession.findByIdAndDelete(id);
 

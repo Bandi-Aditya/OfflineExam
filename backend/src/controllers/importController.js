@@ -4,6 +4,7 @@ import User from '../models/User.js';
 import QuestionBank from '../models/QuestionBank.js';
 import bcrypt from 'bcryptjs';
 import { sendWelcomeEmail } from '../utils/emailService.js';
+import connectDB from '../config/database.js';
 
 /**
  * Bulk Import Students via Excel/CSV
@@ -11,6 +12,7 @@ import { sendWelcomeEmail } from '../utils/emailService.js';
  */
 export const bulkImportStudents = async (req, res) => {
     try {
+        await connectDB();
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No file uploaded' });
         }
@@ -60,8 +62,8 @@ export const bulkImportStudents = async (req, res) => {
                     role: 'student'
                 });
 
-                // Send Welcome Email (Non-blocking)
-                sendWelcomeEmail(email, name || 'Student', studentId, password).catch(e => console.error('Bulk Welcome Email Error:', e));
+                // Send Welcome Email (Awaited for serverless)
+                await sendWelcomeEmail(email, name || 'Student', studentId, password);
 
                 successCount++;
             } catch (err) {
@@ -88,6 +90,7 @@ export const bulkImportStudents = async (req, res) => {
  */
 export const bulkImportQuestions = async (req, res) => {
     try {
+        await connectDB();
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No file uploaded' });
         }

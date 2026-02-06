@@ -2,19 +2,68 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Parse .env from root if not already loaded, though server.js usually does this.
-// Assuming this service is called from within the running app which has env loaded.
+dotenv.config();
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail', // You can change this to 'smtp.gmail.com' or generic SMTP based on env
-    host: process.env.SMTP_HOST || 'smtp.gmail.com',
-    port: process.env.SMTP_PORT || 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_APP_PASSWORD // App Password for Gmail
+// Create transporter lazily to ensure env vars are loaded
+let transporter = null;
+
+const getTransporter = () => {
+    if (!transporter) {
+        const user = process.env.EMAIL_USER;
+        const pass = process.env.EMAIL_APP_PASSWORD;
+
+        console.log(`📧 [Email Service] Initializing transporter...`);
+        console.log(`📧 [Email Service] User: ${user}`);
+        console.log(`📧 [Email Service] Pass Length: ${pass?.length || 0}`);
+
+        if (pass && pass.includes('"')) {
+            console.error('❌ [Email Service] WARNING: Password contains double quotes. Check Vercel environment variables.');
+        }
+
+        if (pass && (pass.startsWith(' ') || pass.endsWith(' '))) {
+            console.error('❌ [Email Service] WARNING: Password contains leading/trailing spaces.');
+        }
+
+        if (!user || !pass) {
+            console.error('❌ [Email Service] CRITICAL ERROR: EMAIL_USER or EMAIL_APP_PASSWORD not set!');
+        }
+
+        // Aggressive cleaning for Vercel: Remove ALL spaces and quotes
+        let cleanedPass = (pass || '').replace(/[\s"']/g, '');
+
+        console.log(`📧 [Email Service] Original Pass Length: ${pass?.length || 0}`);
+        console.log(`📧 [Email Service] Cleaned Pass Length: ${cleanedPass.length}`);
+
+        if (cleanedPass.length > 0) {
+            console.log(`📧 [Email Service] Pass starts with: ${cleanedPass.substring(0, 2)}... and ends with: ...${cleanedPass.substring(cleanedPass.length - 2)}`);
+        }
+
+        // Direct SMTP instead of 'service: gmail'
+        transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: user,
+                pass: cleanedPass
+            },
+            debug: true,
+            logger: true
+        });
+
+        console.log(`🚀 [Email Service] Transporter configured. Valid: ${cleanedPass.length === 16}`);
+
+        // Verify connection configuration
+        transporter.verify(function (error, success) {
+            if (error) {
+                console.error('❌ [Email Service] SMTP Verification Error:', error);
+            } else {
+                console.log('✅ [Email Service] SMTP Server is ready to take our messages');
+            }
+        });
     }
-});
+    return transporter;
+};
 
 /**
  * Send OTP via Email
@@ -23,10 +72,11 @@ const transporter = nodemailer.createTransport({
  * @returns {Promise<boolean>}
  */
 export const sendEmailOTP = async (email, otp) => {
+    console.log(`📧 [Email Service] Attempting to send OTP to ${email}...`);
+
     if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
-        console.warn('⚠️ EMAIL_USER or EMAIL_APP_PASSWORD not set in .env. Email sending skipped.');
-        // For development, we return true so the flow isn't broken, but in prod this should be handled.
-        return true;
+        console.error('❌ [Email Service] Cannot send email: Credentials missing.');
+        return false;
     }
 
     const mailOptions = {
@@ -59,7 +109,7 @@ export const sendEmailOTP = async (email, otp) => {
     };
 
     try {
-        const info = await transporter.sendMail(mailOptions);
+        const info = await getTransporter().sendMail(mailOptions);
         console.log(`✅ [Email Service] Sent OTP to ${email}: ${info.messageId}`);
         return true;
     } catch (error) {
@@ -93,7 +143,7 @@ export const sendWelcomeEmail = async (email, name, studentId, password) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await getTransporter().sendMail(mailOptions);
         return true;
     } catch (error) {
         console.error('Welcome Email Error:', error);
@@ -130,7 +180,7 @@ export const sendExamScheduledEmail = async (email, examDetails) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await getTransporter().sendMail(mailOptions);
         return true;
     } catch (error) {
         console.error('Scheduled Email Error:', error);
@@ -167,7 +217,7 @@ export const sendExamUpdateEmail = async (email, examDetails) => {
     };
 
     try {
-        await transporter.sendMail(mailOptions);
+        await getTransporter().sendMail(mailOptions);
         return true;
     } catch (error) {
         console.error('Update Email Error:', error);

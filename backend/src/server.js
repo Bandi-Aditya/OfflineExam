@@ -15,18 +15,12 @@ import { checkAndSendReminders } from './utils/notificationService.js';
 // Initialize environment variables
 dotenv.config();
 
-// Connect to Database (non-blocking)
+// Connect to Database - start connection immediately
 import connectDB from './config/database.js';
-// Connect to database asynchronously - don't block route registration
-setTimeout(() => {
-    connectDB().catch(err => {
-        console.error('Database connection error:', err);
-        // Don't exit in serverless - let routes still work
-        if (process.env.VERCEL !== '1') {
-            process.exit(1);
-        }
-    });
-}, 0);
+// Start connection immediately (don't wait - bufferCommands will queue queries)
+connectDB().catch(err => {
+    console.error('Database connection error:', err);
+});
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,6 +39,12 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    // Prevent caching for API responses (CRITICAL for data consistency in Vercel)
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
 
     // Handle Preflight (OPTIONS) requests immediately
     if (req.method === 'OPTIONS') {
