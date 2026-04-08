@@ -1,30 +1,82 @@
-# Dependencies
-node_modules
-dist
-build
+# ============================================================
+# DEPENDENCIES
+# ============================================================
+node_modules/
+dist/
+build/
 
-# Environment variables (NEVER commit these!)
+# ============================================================
+# ENVIRONMENT VARIABLES - NEVER COMMIT THESE!
+# ============================================================
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
 backend/.env
+backend/.env.*
 admin-dashboard/.env
+admin-dashboard/.env.*
 portal-client/.env
+portal-client/.env.*
 
-# IDE
-.vscode
-.idea
+# ============================================================
+# SENSITIVE / TEST FILES
+# ============================================================
+# Test scripts
+test-*.js
+verify-*.js
+setup-database.js
+check-*.js
+find-*.cjs
+find-*.js
+startup-test.js
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs and tests
+# Log files
 *.log
+*.txt
+!README.md
+!docs/**/*.md
+!UPDATES_SUMMARY.md
+!VERCEL_GUIDE.md
+!VERCEL_ROUTE_DEBUG.md
+!VERCEL_TROUBLESHOOTING.md
+!test-login.md
+!docs/IMPORT_FORMATS.md
+
+# Output files
 *_output.txt
 output_test.txt
-startup-test.js
-test-email.js
-verify-db.js
+dry_run_*.txt
+port_*.txt
+git_*.txt
+node_version.txt
+vercel_*.txt
+init_log.txt
+dev_start_log.txt
+
+# ============================================================
+# VERCEL
+# ============================================================
 .vercel
 
+# ============================================================
+# IDE / EDITOR
+# ============================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ============================================================
+# OS FILES
+# ============================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# MISC
+# ============================================================
+*.pem
+*.key
+*.cert
+*.p12
