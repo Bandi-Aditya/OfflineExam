@@ -34,6 +34,7 @@ startup-test.js
 *.log
 *.txt
 !README.md
+!portal-client/public/ads.txt
 !docs/**/*.md
 !UPDATES_SUMMARY.md
 !VERCEL_GUIDE.md
